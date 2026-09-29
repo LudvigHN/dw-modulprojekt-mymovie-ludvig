@@ -6,11 +6,11 @@ await fetch("js/components/Genre.json")
         genre = res.genres
     }
     );
-console.log(genre, typeof genre);
 
 import { Header } from "./components/Header.js";
 import { Main } from "./components/Main.js";
 import { Footer } from "./components/Footer.js";
+
 const rootDOM = document.querySelector("#root")
 const baseImgUrl = "https://image.tmdb.org/t/p/w500"
 const nowShowingUrl = "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"
@@ -25,7 +25,7 @@ function NowShowing(url) {
     fetch(url, options)
         .then(res => res.json())
         .then(res => {
-            console.log(res)
+
 
             res.results.forEach(result => {
                 const li = document.createElement("li")
@@ -53,7 +53,6 @@ function Popular(url) {
     fetch(url, options)
         .then(res => res.json())
         .then(res => {
-            console.log(res)
 
             res.results.forEach(result => {
                 const li = document.createElement("li")
@@ -67,10 +66,10 @@ function Popular(url) {
                         <p class="score">⭐${result.vote_average.toFixed(1)}/10 IMDb</p>
                     </div>
                     <ul class="genres"></ul>
+                    <p class="runtime"></p>
                 </div>
                 `
-                const genreNames = result.genre_ids.map(id => genre.find(({ id: genreId }) => genreId === id)?.name)
-                console.log(genreNames);
+                const genreNames = result.genre_ids.map(id => genre.find(({ id:genreId }) => genreId === id)?.name)
                 const genreDOM = li.querySelector(".genres")
                 genreNames.forEach(name => {
                     const genreLi = document.createElement("li")
@@ -80,11 +79,21 @@ function Popular(url) {
                 }
                 )
 
-                ulDOM.append(li)
-            })
-        }
+                fetch(`https://api.themoviedb.org/3/movie/${result.id}?language=en-US`, options)
+                    .then(res => res.json()
+                    .then(res => {
+                        const runtimeDOM = li.querySelector(".runtime")
+                        let hours = 0
+                        let minutes = res.runtime
+                        while(minutes >= 60){
+                            hours += 1
+                            minutes -= 60
+                        }
+                        runtimeDOM.innerHTML = `⌚${hours}h ${minutes}m`
+                    }))
 
-        )
+                ulDOM.append(li)
+            })})
 
         .catch(err => console.error(err));
 }
@@ -99,3 +108,5 @@ function init() {
     render()
 }
 init()
+
+
