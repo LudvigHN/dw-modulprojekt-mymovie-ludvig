@@ -10,6 +10,7 @@ await fetch("js/components/Genre.json")
 import { Header } from "./components/Header.js";
 import { Main } from "./components/Main.js";
 import { Footer } from "./components/Footer.js";
+import { Runtime } from "./components/Runtime.js";
 
 const rootDOM = document.querySelector("#root")
 const baseImgUrl = "https://image.tmdb.org/t/p/w500"
@@ -54,7 +55,7 @@ function Popular(url) {
         .then(res => res.json())
         .then(res => {
 
-            res.results.forEach(result => {
+            res.results.forEach(async result => {
                 const li = document.createElement("li")
                 li.classList.add("popular__item")
                 li.innerHTML = `
@@ -78,19 +79,10 @@ function Popular(url) {
                     genreDOM.append(genreLi)
                 }
                 )
-
-                fetch(`https://api.themoviedb.org/3/movie/${result.id}?language=en-US`, options)
-                    .then(res => res.json()
-                    .then(res => {
-                        const runtimeDOM = li.querySelector(".runtime")
-                        let hours = 0
-                        let minutes = res.runtime
-                        while(minutes >= 60){
-                            hours += 1
-                            minutes -= 60
-                        }
-                        runtimeDOM.innerHTML = `⌚${hours}h ${minutes}m`
-                    }))
+                
+                const runtimeDOM = li.querySelector(".runtime")
+                runtimeDOM.append(await Runtime(result.id,options))
+                
 
                 ulDOM.append(li)
             })})
