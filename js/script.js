@@ -1,9 +1,9 @@
-let genre = {}
+let genreList = {}
 await fetch("js/components/Genre.json")
     .then(res => res.json()
     )
     .then(res => {
-        genre = res.genres
+        genreList = res.genres
     }
     );
 
@@ -70,7 +70,7 @@ function Popular(url) {
                     <p class="runtime"></p>
                 </div>
                 `
-                const genreNames = result.genre_ids.map(id => genre.find(({ id:genreId }) => genreId === id)?.name)
+                const genreNames = result.genre_ids.map(id => genreList.find(({ id:genreId }) => genreId === id)?.name)
                 const genreDOM = li.querySelector(".genres")
                 genreNames.forEach(name => {
                     const genreLi = document.createElement("li")
