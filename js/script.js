@@ -32,7 +32,9 @@ function NowShowing(url) {
                 const li = document.createElement("li")
                 li.classList.add("now_showing__item")
                 li.innerHTML = `
+                <a href="details.html?id=${result.id}">
                 <img src="${baseImgUrl + result.poster_path}" alt="" class="now_showing__img">
+            </a>
                 <div>
                     <h2 class="now_showing__item_title">${result.original_title}</h2>
                     <div class="score_wrapper">
@@ -58,8 +60,9 @@ function Popular(url) {
             res.results.forEach(async result => {
                 const li = document.createElement("li")
                 li.classList.add("popular__item")
-                li.innerHTML = `
+                li.innerHTML = `<a href="details.html?id=${result.id}">
                 <img src="${baseImgUrl + result.poster_path}" alt="" class="now_showing__img">
+                </a>
                 <div>
                     <h2 class="popular__item_title">${result.original_title}</h2>
                     <div class="score_wrapper">
@@ -70,7 +73,7 @@ function Popular(url) {
                     <p class="runtime"></p>
                 </div>
                 `
-                const genreNames = result.genre_ids.map(id => genreList.find(({ id:genreId }) => genreId === id)?.name)
+                const genreNames = result.genre_ids.map(id => genreList.find(({ id: genreId }) => genreId === id)?.name)
                 const genreDOM = li.querySelector(".genres")
                 genreNames.forEach(name => {
                     const genreLi = document.createElement("li")
@@ -79,13 +82,14 @@ function Popular(url) {
                     genreDOM.append(genreLi)
                 }
                 )
-                
+
                 const runtimeDOM = li.querySelector(".runtime")
-                runtimeDOM.append(await Runtime(result.id,options))
-                
+                runtimeDOM.append(await Runtime(result.id, options))
+
 
                 ulDOM.append(li)
-            })})
+            })
+        })
 
         .catch(err => console.error(err));
 }
