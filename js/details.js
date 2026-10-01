@@ -26,7 +26,7 @@ fetch(`https://api.themoviedb.org/3/movie/${id}?append_to_response=videos,credit
         <article class="details_wrapper">
           <div class="details_img_wrapper">
         <a href="${trailerLink}" class="trailer_link">
-          <button class="trailer_btn"></button>
+          <button class="trailer_btn">▶</button>
           Play Trailer</a>
         <!-- <img src="${baseImgUrl + res.backdrop_path}" alt=""> -->
         </div>
@@ -54,12 +54,13 @@ fetch(`https://api.themoviedb.org/3/movie/${id}?append_to_response=videos,credit
           </section>
           <section class="cast">
             <h2 class="title"></h2>
-          <ul class="cast_list"></ul>
+          
           </section>
         </div>
+        <section class="cast_wrapper"><ul class="cast_list"></ul></section>
   </article>
         `
-    rootDOM.querySelector(".cast_list").innerHTML = res.credits.cast.map(actor => `<li class="actor"> <img src="${baseImgUrl + actor.profile_path}" class="actor_img"<p class="actor_name">${actor.name}</p><p class="actor_character thin_text">${actor.character}`).join("")
+    rootDOM.querySelector(".cast_list").innerHTML = res.credits.cast.map(actor => `<li class="actor"> <img src="${baseImgUrl + actor.profile_path}" class="actor_img"><p class="actor_name">${actor.name}</p><p class="actor_character thin_text">${actor.character}`).join("")
     rootDOM.querySelector(".genres").innerHTML = res.genres.map(genre => `<li class="genre">${genre.name}</li>`).join("")
     const runtime = rootDOM.querySelector(".runtime")
     let hours = 0
