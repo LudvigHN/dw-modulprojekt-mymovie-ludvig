@@ -61,9 +61,9 @@ function Popular(url) {
                 const li = document.createElement("li")
                 li.classList.add("popular__item")
                 li.innerHTML = `<a href="details.html?id=${result.id}">
-                <img src="${baseImgUrl + result.poster_path}" alt="" class="now_showing__img">
+                <img src="${baseImgUrl + result.poster_path}" alt="" class="popular__img">
                 </a>
-                <div>
+                <div class="popular_text__wrapper">
                     <h2 class="popular__item_title">${result.original_title}</h2>
                     <div class="score_wrapper">
                         <!-- <img src="" alt="" class="score_img"> -->

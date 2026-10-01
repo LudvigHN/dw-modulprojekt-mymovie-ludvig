@@ -2,11 +2,11 @@ export function Footer(){
     const footer = document.createElement("footer")
     footer.classList.add("footer")
     footer.innerHTML = `
-    <div>
-        <button class="btn_frontpage"><img src="" alt=""></button>
-        <button class="btn_tickets"><img src="" alt=""></button>
-        <button class="btn_favoriets"><img src="" alt=""></button>
-    </div>
+    
+        <button class="footer__btn"><img src="assets/movies.svg" alt=""></button>
+        <button class="footer__btn"><img src="assets/tickets.svg" alt=""></button>
+        <button class="footer__btn"><img src="assets/favorits.svg" alt=""></button>
+    
     `
     return footer
 }
