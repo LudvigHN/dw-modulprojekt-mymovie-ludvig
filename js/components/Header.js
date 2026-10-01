@@ -4,7 +4,7 @@ export function Header(){
     header.innerHTML =`
     <h1 class="header_title">MyMovies</h1>
     <label class="switch">
-        <input type="checkbox">
+        <input type="checkbox" id="switch">
         <span class="slider round"></span>
     </label>
     ` 
