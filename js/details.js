@@ -1,3 +1,5 @@
+import { DetailsHeader } from "./components/DetailsHead.js"
+import { ColorScheme } from "./components/ColorScheme.js"
 const url = new URL(window.location.href)
 const params = url.searchParams
 const id = params.get("id")
@@ -12,10 +14,12 @@ const options = {
   }
 };
 
-fetch(`https://api.themoviedb.org/3/movie/${id}?append_to_response=videos,credits,language=en-US`, options)
+async function details(){
+  await fetch(`https://api.themoviedb.org/3/movie/${id}?append_to_response=videos,credits,language=en-US`, options)
   .then(res => res.json())
   .then(res => {
     console.log(res);
+    
     let rating = ""
     if (res.adult == true) {
       rating = "18+"
@@ -60,6 +64,7 @@ fetch(`https://api.themoviedb.org/3/movie/${id}?append_to_response=videos,credit
         <section class="cast_wrapper"><ul class="cast_list"></ul></section>
   </article>
         `
+        rootDOM.prepend(DetailsHeader())
     rootDOM.querySelector(".cast_list").innerHTML = res.credits.cast.map(actor => `<li class="actor"> <img src="${baseImgUrl + actor.profile_path}" class="actor_img"><p class="actor_name">${actor.name}</p><p class="actor_character thin_text">${actor.character}`).join("")
     rootDOM.querySelector(".genres").innerHTML = res.genres.map(genre => `<li class="genre">${genre.name}</li>`).join("")
     const runtime = rootDOM.querySelector(".runtime")
@@ -77,4 +82,14 @@ fetch(`https://api.themoviedb.org/3/movie/${id}?append_to_response=videos,credit
     document.querySelector(".details_img_wrapper").style.backgroundImage = `url(${baseImgUrl + res.backdrop_path})`
   }
   )
-  .catch(err => console.error(err));
+  .catch(err => console.error(err));}
+
+  async function render(){
+    
+    await details()
+    ColorScheme()
+  }
+  function init (){
+    render()
+  }
+  init()

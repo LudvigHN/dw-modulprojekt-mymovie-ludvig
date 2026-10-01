@@ -11,7 +11,7 @@ import { Header } from "./components/Header.js";
 import { Main } from "./components/Main.js";
 import { Footer } from "./components/Footer.js";
 import { Runtime } from "./components/Runtime.js";
-
+import { ColorScheme } from "./components/ColorScheme.js";
 const rootDOM = document.querySelector("#root")
 const baseImgUrl = "https://image.tmdb.org/t/p/w500"
 const nowShowingUrl = "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"
@@ -21,9 +21,9 @@ const options = {
     method: 'GET',
     headers: { accept: 'application/json', Authorization: 'Bearer ' + apiKey }
 };
-function NowShowing(url) {
+async function NowShowing(url) {
     const ulDOM = document.querySelector(".now_showing__list")
-    fetch(url, options)
+    await fetch(url, options)
         .then(res => res.json())
         .then(res => {
 
@@ -51,9 +51,9 @@ function NowShowing(url) {
 
         .catch(err => console.error(err));
 }
-function Popular(url) {
+async function Popular(url) {
     const ulDOM = document.querySelector(".popular__list")
-    fetch(url, options)
+    await fetch(url, options)
         .then(res => res.json())
         .then(res => {
 
@@ -94,10 +94,12 @@ function Popular(url) {
         .catch(err => console.error(err));
 }
 
-function render() {
+async function render() {
     rootDOM.append(Header(), Main(), Footer())
-    NowShowing(nowShowingUrl)
-    Popular(popularUrl)
+    await NowShowing(nowShowingUrl)
+    await Popular(popularUrl)
+    ColorScheme()
+
 }
 
 function init() {
