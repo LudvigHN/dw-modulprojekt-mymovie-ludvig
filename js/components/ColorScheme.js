@@ -4,7 +4,7 @@ export function ColorScheme(){
     const systemTheme = window.matchMedia("(prefers-color-scheme:dark)")
     const storageKey = "darkmode"
     function applyTheme(theme){
-        console.log(root);
+
         
         root.setAttribute("data-mode", theme)
         if(theme === "dark"){
