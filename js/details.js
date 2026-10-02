@@ -14,24 +14,25 @@ const options = {
   }
 };
 
-async function details(){
+async function details() {
   await fetch(`https://api.themoviedb.org/3/movie/${id}?append_to_response=videos,credits,language=en-US`, options)
-  .then(res => res.json())
-  .then(res => {
-    console.log(res);
-    
-    let rating = ""
-    if (res.adult == true) {
-      rating = "18+"
-    }
-    else { rating = "PG-13" }
-    const trailerLink = "https://www.youtube.com/watch?v=" + res.videos.results.find(video => video.name.includes("Trailer")).key;
-    rootDOM.innerHTML = `
+    .then(res => res.json())
+    .then(res => {
+      console.log(res);
+
+      let rating = ""
+      if (res.adult == true) {
+        rating = "18+"
+      }
+      else { rating = "PG-13" }
+      console.log(res.videos.results);
+      
+      const trailerLink = res.videos.results.find(video => video.type === "Trailer" && video.site === "YouTube").key;
+      rootDOM.innerHTML = `
         <article class="details_wrapper">
           <div class="details_img_wrapper">
-        <a href="${trailerLink}" class="trailer_link">
           <button class="trailer_btn">▶</button>
-          Play Trailer</a>
+          Play Trailer
         <!-- <img src="${baseImgUrl + res.backdrop_path}" alt=""> -->
         </div>
         <div class="details_content">
@@ -64,32 +65,41 @@ async function details(){
         <section class="cast_wrapper"><ul class="cast_list"></ul></section>
   </article>
         `
-        rootDOM.prepend(DetailsHeader())
-    rootDOM.querySelector(".cast_list").innerHTML = res.credits.cast.map(actor => `<li class="actor"> <img src="${baseImgUrl + actor.profile_path}" class="actor_img"><p class="actor_name">${actor.name}</p><p class="actor_character thin_text">${actor.character}`).join("")
-    rootDOM.querySelector(".genres").innerHTML = res.genres.map(genre => `<li class="genre">${genre.name}</li>`).join("")
-    const runtime = rootDOM.querySelector(".runtime")
-    let hours = 0
-    let minutes = res.runtime
-    while (minutes >= 60) {
-      hours += 1
-      minutes -= 60
-    }
-    runtime.textContent = `${hours}h ${minutes}m`
-    if (res.original_title != res.title) {
-      const title = rootDOM.querySelector(".details_title")
-      title.innerHTML += `<span class="english_title">${res.title}</span>`
-    }
-    document.querySelector(".details_img_wrapper").style.backgroundImage = `url(${baseImgUrl + res.backdrop_path})`
-  }
-  )
-  .catch(err => console.error(err));}
+      rootDOM.prepend(DetailsHeader())
+      rootDOM.querySelector(".cast_list").innerHTML = res.credits.cast.map(actor => `<li class="actor"> <img src="${baseImgUrl + actor.profile_path}" class="actor_img"><p class="actor_name">${actor.name}</p><p class="actor_character thin_text">${actor.character}</p>`).join("")
+      rootDOM.querySelector(".genres").innerHTML = res.genres.map(genre => `<li class="genre">${genre.name}</li>`).join("")
+      const runtime = rootDOM.querySelector(".runtime")
+      let hours = 0
+      let minutes = res.runtime
+      while (minutes >= 60) {
+        hours += 1
+        minutes -= 60
+      }
+      runtime.textContent = `${hours}h ${minutes}m`
+      if (res.original_title != res.title) {
+        const title = rootDOM.querySelector(".details_title")
+        title.innerHTML += `<span class="english_title">${res.title}</span>`
+      }
+      document.querySelector(".details_img_wrapper").style.backgroundImage = `url(${baseImgUrl + res.backdrop_path})`
+      const trailerBtn = document.querySelector(".trailer_btn")
+      trailerBtn.addEventListener("click", function () {
+        document.querySelector(".details_img_wrapper").innerHTML = `
+        
+      <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/${trailerLink}?si=32oSoVtXNNadRlZJ&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      `
 
-  async function render(){
-    
-    await details()
-    ColorScheme()
-  }
-  function init (){
-    render()
-  }
-  init()
+      })
+    }
+    )
+    .catch(err => console.error(err))
+};
+
+async function render() {
+
+  await details()
+  ColorScheme()
+}
+function init() {
+  render()
+}
+init()
