@@ -1,5 +1,4 @@
 export function ColorScheme(){
-    console.log(1);
     const root = document.documentElement;
     const toggle = document.querySelector("#switch")
     const systemTheme = window.matchMedia("(prefers-color-scheme:dark)")
@@ -24,7 +23,6 @@ export function ColorScheme(){
             toggle.checked = false
         }
     }
-    console.log(1);
     toggle.addEventListener("change",()=>{
         let theme;
 
