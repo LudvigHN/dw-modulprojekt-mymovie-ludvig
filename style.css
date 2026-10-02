@@ -1,3 +1,9 @@
+*{
+  font-family: mulish,sans-serif;
+}
+h1,h2,h3,h4,h5,h6{
+  font-family: merriweather,mulish,sans-serif;
+}
 [data-mode="dark"]{
   color-scheme: dark;
 }
@@ -108,6 +114,7 @@ ul{
 .now_showing__item_title{
   font-size: 1rem;
   margin: 0.5rem 0;
+  font-family: mulish,sans-serif;
 }
 .score{
   margin: 0;
@@ -231,13 +238,17 @@ top: 0;
 
 .info_list{
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 10vw;
 }
 .info_list li p{
   margin: 5px 0;
 }
 .description p{
   text-wrap: pretty;
+}
+.cast_title{
+  margin: 1rem;
 }
 .cast_list{
   display: flex;

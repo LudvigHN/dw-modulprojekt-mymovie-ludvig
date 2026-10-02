@@ -54,12 +54,10 @@ async function details() {
             <h2 class="title">description</h2>
             <p class="thin_text">${res.overview}</p>
           </section>
-          <section class="cast">
-            <h2 class="title"></h2>
-          
-          </section>
         </div>
-        <section class="cast_wrapper"><ul class="cast_list"></ul></section>
+        <section class="cast_wrapper">
+          <h2 class="cast_title">Cast</h2>
+          <ul class="cast_list"></ul></section>
   </article>
   </main>
         `
