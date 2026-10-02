@@ -13,19 +13,23 @@ const options = {
     Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MGNlZGQ3M2I0MWRlMDZjNTQxYzllMTI5ODgxNmVkMyIsIm5iZiI6MTc5MDU4NDA1Ny4xNDIwMDAyLCJzdWIiOiI2YWJhMjRmOTQwOTI0MWJlNjQxYjczMzEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.IgJBOVrWs57pYgJGpLQOam5z9EY_-m4RpomuZk6jhQ8'
   }
 };
-
 async function details() {
   await fetch(`https://api.themoviedb.org/3/movie/${id}?append_to_response=videos,credits,release_dates,language=en-US`, options)
     .then(res => res.json())
     .then(res => {
       console.log(res);
-      let rating = res.release_dates.results.find(release => release.iso_3166_1 == "US").release_dates.find(item => item.certification != "").certification    
-      const trailerLink = res.videos.results.find(video => video.type === "Trailer" && video.site === "YouTube").key;
+      let rating = null
+      const us = res.release_dates.results.find(release => release.iso_3166_1 =="US")
+      const usCheck = us ?? res.release_dates.results.find(release => release.release_dates.some(item=>item.certification != ""))
+        rating = usCheck?.release_dates.find(item => item.certification != "")?.certification
+      const trailer = res.videos.results.find(video => video.type === "Trailer" && video.site === "YouTube");
+      const trailerLink = trailer?.key
       rootDOM.innerHTML = `
+      <main>
         <article class="details_wrapper">
           <div class="details_img_wrapper">
           <button class="trailer_btn">▶</button>
-          Play Trailer
+          <p class="trailer_text">Play Trailer</p>
         <!-- <img src="${baseImgUrl + res.backdrop_path}" alt=""> -->
         </div>
         <div class="details_content">
@@ -57,6 +61,7 @@ async function details() {
         </div>
         <section class="cast_wrapper"><ul class="cast_list"></ul></section>
   </article>
+  </main>
         `
       rootDOM.prepend(DetailsHeader())
       rootDOM.querySelector(".cast_list").innerHTML = res.credits.cast.map(actor => `<li class="actor"> <img src="${baseImgUrl + actor.profile_path}" class="actor_img"><p class="actor_name">${actor.name}</p><p class="actor_character thin_text">${actor.character}</p>`).join("")
@@ -71,17 +76,22 @@ async function details() {
       runtime.textContent = `${hours}h ${minutes}m`
       if (res.original_title != res.title) {
         const title = rootDOM.querySelector(".details_title")
-        title.innerHTML += `<span class="english_title">${res.title}</span>`
+        title.innerHTML += `<br><span class="english_title thin_text">${res.title}</span>`
       }
       document.querySelector(".details_img_wrapper").style.backgroundImage = `url(${baseImgUrl + res.backdrop_path})`
       const trailerBtn = document.querySelector(".trailer_btn")
+      
       trailerBtn.addEventListener("click", function () {
+        
+        if(res.videos.results.length != 0){
         document.querySelector(".details_img_wrapper").innerHTML = `
         
       <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/${trailerLink}?si=32oSoVtXNNadRlZJ&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       `
-
-      })
+      }else{
+        document.querySelector(".details_img_wrapper").innerHTML = `<p>no available trailer</p>`
+      }
+    })
     }
     )
     .catch(err => console.error(err))
