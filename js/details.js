@@ -15,18 +15,11 @@ const options = {
 };
 
 async function details() {
-  await fetch(`https://api.themoviedb.org/3/movie/${id}?append_to_response=videos,credits,language=en-US`, options)
+  await fetch(`https://api.themoviedb.org/3/movie/${id}?append_to_response=videos,credits,release_dates,language=en-US`, options)
     .then(res => res.json())
     .then(res => {
       console.log(res);
-
-      let rating = ""
-      if (res.adult == true) {
-        rating = "18+"
-      }
-      else { rating = "PG-13" }
-      console.log(res.videos.results);
-      
+      let rating = res.release_dates.results.find(release => release.iso_3166_1 == "US").release_dates.find(item => item.certification != "").certification    
       const trailerLink = res.videos.results.find(video => video.type === "Trailer" && video.site === "YouTube").key;
       rootDOM.innerHTML = `
         <article class="details_wrapper">
